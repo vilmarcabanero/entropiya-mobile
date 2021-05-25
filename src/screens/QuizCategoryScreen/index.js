@@ -6,6 +6,7 @@ const QuizCategoryScreen = () => {
     <S.Container>
       <S.Title>Hello World!</S.Title>
       <S.Icon size={18} color="#e47911" name="star" />
+      <S.Icon size={18} color="#e47911" name="star-o" />
     </S.Container>
   );
 };
