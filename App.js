@@ -7,14 +7,10 @@
  */
 
 import React from 'react';
-import {Text, View} from 'react-native';
+import QuizCategoryScreen from './src/screens/QuizCategoryScreen';
 
 const App = () => {
-  return (
-    <View>
-      <Text>Hello world!</Text>
-    </View>
-  );
+  return <QuizCategoryScreen />;
 };
 
 export default App;
