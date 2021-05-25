@@ -30,7 +30,11 @@ const QuizCategories = () => {
   }, []);
 
   // console.log({ categories })
-  return <Text>Hello from Quiz Category!</Text>;
+  return (
+    <Text>
+      <Text>Hello from Quiz Category!</Text>;
+    </Text>
+  );
 };
 
 export default QuizCategories;
