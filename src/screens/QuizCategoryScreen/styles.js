@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import {View, Text} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export const Container = styled(View)`
   flex: 1;
@@ -10,8 +9,4 @@ export const Container = styled(View)`
 
 export const Title = styled(Text)`
   color: steelblue;
-`;
-
-export const Icon = styled(FontAwesome)`
-  margin: 2px;
 `;

@@ -1,12 +1,12 @@
 import React from 'react';
 import * as S from './styles';
+import QuizCategory from '../../components/QuizCategory';
 
 const QuizCategoryScreen = () => {
   return (
     <S.Container>
       <S.Title>Hello World!</S.Title>
-      <S.Icon size={18} color="#e47911" name="star" />
-      <S.Icon size={18} color="#e47911" name="star-o" />
+      <QuizCategory />
     </S.Container>
   );
 };
