@@ -1,12 +1,11 @@
 import React from 'react';
 import * as S from './styles';
-import QuizCategory from '../../components/QuizCategory';
+import Quiz from '../../components/Quiz';
 
 const QuizCategoryScreen = () => {
   return (
     <S.Container>
-      <S.Title>Hello World!</S.Title>
-      <QuizCategory />
+      <Quiz />
     </S.Container>
   );
 };
