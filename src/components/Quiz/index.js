@@ -1,40 +1,80 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import API from '../../api';
 import * as S from './styles';
+import axios from 'axios';
 
 const Index = () => {
   const [chapter, setChapter] = useState(151);
   const [quizNumber, setQuizNumber] = useState(null);
   const [difficulty, setDifficulty] = useState(1);
   const [quizData, setQuizData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [url, setUrl] = useState(
+    // 'https://hn.algolia.com/api/v1/search?query=redux',
+    `https://entropiya-api.herokuapp.com/api/quiz/questions?amount=3&chapter=${chapter}&difficulty=1`,
+  );
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await axios(url);
+
+        setQuizData(result.data);
+        console.log(result.data);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [url]);
 
   const fetchQuizData = async () => {
     try {
-      const url = `quiz/questions?amount=${quizNumber}&chapter=${chapter}&difficulty=${difficulty}`;
+      const url1 = `quiz/questions?amount=${quizNumber}&chapter=${chapter}&difficulty=${difficulty}`;
+      const {data} = await API.get(url1);
 
-      const {data} = await API.get(url);
+      const formattedData = data.map(q => {
+        const incorrectAnswersIndexes = q.incorrect_answers.length;
+        const randomIndex = Math.round(
+          Math.random() * (incorrectAnswersIndexes - 0) + 0,
+        );
 
-      setQuizData(data);
-      console.log(data);
-      console.log(data[0].question);
-      console.log(quizData[0].question);
+        q.incorrect_answers.splice(randomIndex, 0, q.correct_answer);
+
+        return {
+          ...q,
+          answers: q.incorrect_answers,
+        };
+      });
+
+      console.log('Line 32, res.data.length: ', data.length);
+
+      setQuizData(formattedData);
+      console.log('Line 32, quizData.length: ', quizData.length);
     } catch (error) {
-      console.log('Fetch quiz error =====>>>>>', error);
+      console.log('Fetch quiz error =====>>>>', error);
     }
   };
 
-  const submitHandler = () => {
-    if (quizData.length !== 0) {
-      fetchQuizData();
-      console.log();
-      console.log(`
-    Difficulty: ${difficulty},
-    Quiz Number: ${quizNumber},
-    Chapter: ${chapter},
+  // useEffect(fetchQuizData(), []);
 
-    Test started!
-    `);
-    }
+  const submitHandler = () => {
+    console.log('First', quizData.length !== 0, quizNumber !== null);
+    fetchQuizData();
+    fetchData();
+    console.log('Second', quizData.length !== 0, quizNumber !== null);
+
+    // if (quizData.length !== 0 && quizNumber !== null) {
+    //   fetchQuizData();
+    //   console.log('Test started!');
+    //   console.log('quizData.length: ', quizData.length);
+    // }
   };
 
   // Question: ${quizData[0].question}
@@ -49,6 +89,14 @@ const Index = () => {
   const quizNumberChangeHandler = (itemValue, itemIndex) => {
     setQuizNumber(itemValue);
   };
+
+  if (isLoading) {
+    return (
+      <S.Container>
+        <S.Title>Loading...</S.Title>
+      </S.Container>
+    );
+  }
 
   return (
     <S.Container>
