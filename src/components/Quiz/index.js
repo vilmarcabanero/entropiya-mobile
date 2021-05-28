@@ -1,16 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import API from '../../api';
 import * as S from './styles';
 
 const Index = () => {
   const [chapter, setChapter] = useState(151);
-
   const [quizNumber, setQuizNumber] = useState(null);
   const [difficulty, setDifficulty] = useState(1);
-
   const [quizData, setQuizData] = useState([]);
-
-  const [currentQuizStep, setCurrentQuizStep] = useState('start');
 
   const fetchQuizData = async () => {
     try {
@@ -18,51 +14,30 @@ const Index = () => {
 
       const {data} = await API.get(url);
 
-      const formattedCategory = data.map(question => {
-        const incorrectAnswersIndexes = question.incorrect_answers.length;
-        const randomIndex = Math.round(
-          Math.random() * (incorrectAnswersIndexes - 0) + 0,
-        );
-        question.incorrect_answers.splice(
-          randomIndex,
-          0,
-          question.correct_answer,
-        );
-        return {
-          ...question,
-          answers: question.incorrect_answers,
-        };
-      });
-      setQuizData(formattedCategory);
-      setCurrentQuizStep('results');
+      setQuizData(data);
+      console.log(data);
+      console.log(data[0].question);
+      console.log(quizData[0].question);
     } catch (error) {
       console.log('Fetch quiz error =====>>>>>', error);
     }
   };
 
-  useEffect(() => {
-    fetchQuizData();
-  }, []);
-
   const submitHandler = () => {
-    fetchQuizData();
-    alert(`
+    if (quizData.length !== 0) {
+      fetchQuizData();
+      console.log();
+      console.log(`
     Difficulty: ${difficulty},
     Quiz Number: ${quizNumber},
-    Chapter: ${chapter}
-    Question: ${quizData[0].question}
-    Test started!
-    `);
-    console.log(quizData);
-    console.log(`
-    Difficulty: ${difficulty},
-    Quiz Number: ${quizNumber},
-    Chapter: ${chapter}
+    Chapter: ${chapter},
 
     Test started!
     `);
+    }
   };
 
+  // Question: ${quizData[0].question}
   const chapterChangeHandler = (itemValue, itemIndex) => {
     setChapter(itemValue);
   };
@@ -122,7 +97,6 @@ const Index = () => {
     Difficulty: ${difficulty},
     Quiz Number: ${quizNumber},
     Chapter: ${chapter}
-    Question: ${quizData[0].question}
     Test started!
     `}</S.Label>
       </S.PickerContainer>
@@ -131,3 +105,19 @@ const Index = () => {
 };
 
 export default Index;
+
+// const formattedData = data.map(question => {
+//   const incorrectAnswersIndexes = question.incorrect_answers.length;
+//   const randomIndex = Math.round(
+//     Math.random() * (incorrectAnswersIndexes - 0) + 0,
+//   );
+//   question.incorrect_answers.splice(
+//     randomIndex,
+//     0,
+//     question.correct_answer,
+//   );
+//   return {
+//     ...question,
+//     answers: question.incorrect_answers,
+//   };
+// });
